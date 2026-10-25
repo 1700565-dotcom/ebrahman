@@ -1,0 +1,1168 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>e-Brahman · Brahman Origins</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sidebar: #343a40;
+    --sidebar-item: #454d55;
+    --sidebar-item-border: #535c66;
+    --sidebar-text: #f1f3f5;
+    --yellow: #ffc107;
+    --yellow-dark: #e0a800;
+    --maroon: #77263a;
+    --maroon-dark: #5c1c2c;
+    --gold: #ffc107;
+    --gold-soft: #fff4d1;
+    --content-bg: #f4f6f9;
+    --paper: #ffffff;
+    --ink: #212529;
+    --muted: #6c757d;
+    --line: #dee2e6;
+    --ok: #1e7e45;
+    --ok-soft: #e2f4e9;
+    --bad: #c0392b;
+    --bad-soft: #fbe9e7;
+    --radius: 6px;
+    --shadow: 0 0 1px rgba(0,0,0,.125), 0 1px 3px rgba(0,0,0,.2);
+    --sidebar-w: 250px;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    background: var(--content-bg);
+    color: var(--ink);
+    font: 16px/1.5 "Source Sans 3", "Source Sans Pro", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3 { line-height: 1.2; margin: 0; font-weight: 600; }
+  h1 { font-size: 1.6rem; }
+  h2 { font-size: 1.35rem; }
+  button, input, select { font: inherit; color: inherit; }
+  [hidden] { display: none !important; }
+  .mono { font-family: "IBM Plex Mono", ui-monospace, monospace; }
+
+  .sim-notice {
+    position: fixed; left: 0; right: 0; top: 0; height: 30px; z-index: 50;
+    background: var(--gold-soft); color: #6b4e00; font-size: 13px;
+    display: flex; align-items: center; justify-content: center; padding: 0 12px;
+    border-bottom: 1px solid #f0d98a; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+
+  /* ---------- Sidebar ---------- */
+  .sim-notice .short { display: none; }
+  .sidebar {
+    position: fixed; top: 30px; bottom: 0; left: 0; width: var(--sidebar-w); z-index: 40;
+    background: var(--sidebar); color: var(--sidebar-text);
+    box-shadow: 0 14px 28px rgba(0,0,0,.25);
+    transition: transform .25s ease;
+    display: flex; flex-direction: column;
+  }
+  .brand {
+    height: 70px; display: flex; align-items: center; gap: 12px; padding: 0 18px;
+    border-bottom: 1px solid #4b545c; font-size: 1.3rem; font-weight: 400; letter-spacing: .2px;
+  }
+  .brand svg { width: 38px; height: 38px; flex: none; }
+  .menu { padding: 10px 8px; display: grid; gap: 4px; }
+  .nav-item {
+    display: flex; align-items: center; gap: 12px; width: 100%; text-align: left; cursor: pointer;
+    padding: 11px 14px; border-radius: 4px; border: 1px solid var(--sidebar-item-border);
+    background: var(--sidebar-item); color: var(--sidebar-text); font-size: 1.05rem;
+  }
+  .nav-item svg { width: 22px; height: 22px; flex: none; }
+  .nav-item:hover { background: #4f5861; }
+  .nav-item.active { background: var(--yellow); border-color: var(--yellow); color: #1f2d3d; box-shadow: 0 1px 3px rgba(0,0,0,.2); }
+  .sidebar-foot { margin-top: auto; padding: 14px 18px; font-size: 12.5px; color: #adb5bd; border-top: 1px solid #4b545c; }
+
+  /* ---------- Main ---------- */
+  .main { margin-left: var(--sidebar-w); padding-top: 30px; min-height: 100vh; display: flex; flex-direction: column; transition: margin-left .25s ease; }
+  body.sidebar-collapsed .sidebar { transform: translateX(-100%); }
+  body.sidebar-collapsed .main { margin-left: 0; }
+  .topbar {
+    height: 70px; background: #fff; border-bottom: 1px solid var(--line);
+    display: flex; align-items: center; padding: 0 12px; position: sticky; top: 30px; z-index: 30;
+  }
+  .icon-btn { background: none; border: 0; padding: 10px 14px; cursor: pointer; color: #6c757d; border-radius: 4px; display: grid; place-items: center; }
+  .icon-btn:hover { color: var(--ink); background: #f1f3f5; }
+  .icon-btn svg { width: 22px; height: 22px; }
+  .topbar-right { margin-left: auto; display: flex; align-items: center; gap: 4px; }
+  .sy { font-size: 14px; color: var(--muted); margin-right: 8px; }
+  .content { padding: 22px 20px 40px; flex: 1; }
+  .page-title { font-size: 2rem; font-weight: 400; margin: 0 0 20px; }
+  footer.app-foot { background: #fff; border-top: 1px solid var(--line); padding: 14px 20px; font-size: 14px; color: var(--muted); }
+  .backdrop { display: none; }
+
+  /* ---------- AdminLTE-style cards ---------- */
+  .panel { background: #fff; border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 20px; overflow: hidden; }
+  .panel-outline { border-top: 3px solid var(--yellow); }
+  .panel-header { background: var(--maroon); color: #fff; padding: 14px 22px; font-size: 1.2rem; display: flex; align-items: center; gap: 10px; }
+  .panel-header .sub { margin-left: auto; font-size: .9rem; opacity: .85; }
+  .panel-body { padding: 22px; }
+  .dash-grid { display: grid; grid-template-columns: minmax(260px, 1fr) 2.2fr; gap: 20px; align-items: start; }
+
+  .profile { text-align: center; }
+  .avatar {
+    width: 120px; height: 120px; border-radius: 50%; margin: 0 auto 12px;
+    background: var(--yellow); border: 3px solid #adb5bd; display: grid; place-items: center;
+    font-size: 2.6rem; font-weight: 700; color: var(--maroon);
+  }
+  .profile-name { font-size: 1.35rem; font-weight: 600; }
+  .profile-sub { color: var(--muted); font-size: .95rem; }
+  .info-list { list-style: none; padding: 0; margin: 18px 0 0; text-align: left; }
+  .info-list li { display: flex; justify-content: space-between; gap: 10px; padding: 9px 2px; border-top: 1px solid var(--line); font-size: .95rem; }
+  .info-list li b { font-weight: 600; }
+  .info-list li span { color: var(--maroon); text-align: right; }
+
+  table.grades { width: 100%; border-collapse: collapse; }
+  table.grades th, table.grades td { text-align: left; padding: 12px 10px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+  table.grades th { font-weight: 600; font-size: .95rem; border-bottom-width: 2px; }
+  table.grades tr:last-child td { border-bottom: 0; }
+  .pill { display: inline-block; font-size: .8rem; font-weight: 700; padding: 3px 9px; border-radius: 4px; }
+  .pill.ok { background: #28a745; color: #fff; }
+  .pill.wait { background: #6c757d; color: #fff; }
+  .pill.locked { background: #e9ecef; color: var(--muted); }
+  .pill.next { background: var(--yellow); color: #1f2d3d; }
+  tr.row-next td { background: #fffbea; }
+  .next-card { display: flex; gap: 16px; align-items: center; justify-content: space-between; flex-wrap: wrap; padding: 16px 18px; border: 1px solid var(--line); border-top: 3px solid var(--yellow); border-radius: var(--radius); margin: 16px 0 0; background: #fffdf5; }
+  .next-card .big { font-size: 1.9rem; font-weight: 700; color: var(--maroon); line-height: 1.1; }
+  .small-label { font-size: 12.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); margin-bottom: 4px; }
+  .type-badge { font-size: .8rem; font-weight: 700; padding: 5px 11px; border-radius: 4px; text-transform: uppercase; letter-spacing: .4px; }
+  .type-badge.new { background: var(--maroon); color: #fff; }
+  .type-badge.ret { background: #17a2b8; color: #fff; }
+  .path { list-style: none; display: flex; gap: 4px; padding: 0; margin: 14px 0 0; flex-wrap: wrap; }
+  .path li { font-size: 12.5px; padding: 3px 8px; border-radius: 4px; background: #e9ecef; color: var(--muted); }
+  .path li.done { background: #d4edda; color: #155724; }
+  .path li.cur { background: var(--yellow); color: #1f2d3d; font-weight: 700; }
+  .profile .path { justify-content: center; }
+  a { color: var(--maroon); }
+  .how ol { margin: 0; padding-left: 20px; }
+  .how li { margin: 4px 0; }
+
+  /* ---------- Enrollment wizard ---------- */
+  .stepper { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin: 0 0 22px; list-style: none; padding: 0; }
+  .stepper li { text-align: center; font-size: 13px; color: var(--muted); }
+  .stepper .bar { height: 5px; border-radius: 3px; background: var(--line); margin-bottom: 6px; }
+  .stepper li.done .bar { background: var(--yellow); }
+  .stepper li.active .bar { background: var(--maroon); }
+  .stepper li.active { color: var(--maroon); font-weight: 700; }
+  .stepper .num { margin-right: 4px; }
+
+  .card { background: transparent; }
+  .card + .card { margin-top: 16px; }
+  .eyebrow { font-size: 12.5px; font-weight: 700; letter-spacing: .6px; text-transform: uppercase; color: var(--maroon); margin-bottom: 6px; }
+  .lead { color: var(--muted); margin: 8px 0 0; }
+
+  .levels { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 20px 0; }
+  .level { text-align: left; cursor: pointer; background: #fff; border: 1px solid var(--line); border-top: 3px solid var(--line); border-radius: var(--radius); padding: 14px 16px; box-shadow: 0 1px 2px rgba(0,0,0,.05); }
+  .level:hover { border-top-color: #e3b9c3; }
+  .level[aria-pressed="true"] { border-top-color: var(--yellow); background: #fffaf0; box-shadow: var(--shadow); }
+  .level .lv-entry { font-weight: 700; font-size: 1.4rem; color: var(--maroon); }
+  .level .lv-name { font-weight: 600; }
+  .level .lv-desc { font-size: 14px; color: var(--muted); margin-top: 4px; }
+
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 16px; }
+  .field label { display: block; font-size: 15px; font-weight: 600; margin-bottom: 5px; }
+  .field .hint { font-size: 13px; color: var(--muted); margin-top: 4px; }
+  .field input, .field select { width: 100%; padding: 9px 12px; border: 1px solid #ced4da; border-radius: 4px; background: #fff; }
+  .field input:focus, .field select:focus { outline: none; border-color: #c0687e; box-shadow: 0 0 0 3px rgba(119,38,58,.15); }
+  .field input[readonly] { background: #e9ecef; font-family: "IBM Plex Mono", monospace; letter-spacing: 1px; }
+  .field.full { grid-column: 1 / -1; }
+  .error { color: var(--bad); font-size: 14px; margin-top: 10px; min-height: 18px; }
+
+  .rules { margin: 18px 0 0; padding: 12px 16px; background: #f8f9fa; border-left: 4px solid var(--yellow); border-radius: 4px; font-size: 15px; }
+  .rules ul { margin: 6px 0 0; padding-left: 20px; }
+
+  .actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 22px; flex-wrap: wrap; }
+  .btn { border: 1px solid var(--maroon); border-radius: 4px; padding: 8px 18px; font-weight: 600; cursor: pointer; background: var(--maroon); color: #fff; }
+  .btn:hover { background: var(--maroon-dark); border-color: var(--maroon-dark); }
+  .btn:disabled { opacity: .5; cursor: not-allowed; }
+  .btn.ghost { background: #fff; color: var(--maroon); }
+  .btn.ghost:hover { background: #fbf2f4; }
+  .btn.gold { background: var(--yellow); border-color: var(--yellow); color: #1f2d3d; }
+  .btn.gold:hover { background: var(--yellow-dark); border-color: var(--yellow-dark); }
+  .btn.sm { padding: 4px 12px; font-size: 14px; }
+
+  .exam-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .timer { margin-left: auto; font-family: "IBM Plex Mono", monospace; font-weight: 600; font-size: 18px; padding: 4px 12px; border-radius: 4px; background: #f1f3f5; }
+  .timer.low { background: var(--bad-soft); color: var(--bad); }
+  .progress { height: 8px; background: #e9ecef; border-radius: 4px; margin: 14px 0 20px; overflow: hidden; }
+  .progress > div { height: 100%; background: var(--yellow); transition: width .2s; }
+  .subject { display: inline-block; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .4px; color: #fff; background: var(--maroon); padding: 3px 9px; border-radius: 4px; }
+  .question { font-size: 1.25rem; margin: 10px 0 16px; }
+  .choices { display: grid; gap: 10px; }
+  .choice { display: flex; gap: 12px; align-items: center; text-align: left; cursor: pointer; padding: 11px 14px; border: 1px solid var(--line); border-radius: var(--radius); background: #fff; }
+  .choice:hover { background: #f8f9fa; }
+  .choice[aria-checked="true"] { border-color: var(--maroon); background: #fbf2f4; }
+  .choice .key { flex: none; width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; font-weight: 700; font-size: 14px; background: #e9ecef; }
+  .choice[aria-checked="true"] .key { background: var(--maroon); color: #fff; }
+  .dots { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 20px; }
+  .dot { width: 34px; height: 34px; border-radius: 4px; border: 1px solid var(--line); background: #fff; cursor: pointer; font-size: 14px; }
+  .dot.answered { background: var(--gold-soft); border-color: #f0cf6a; }
+  .dot.current { border-color: var(--maroon); border-width: 2px; }
+
+  .score-ring { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+  .score-big { font-weight: 700; font-size: 56px; line-height: 1; color: var(--maroon); }
+  .badge { display: inline-block; font-weight: 700; font-size: 13px; letter-spacing: .4px; text-transform: uppercase; padding: 4px 10px; border-radius: 4px; }
+  .badge.pass { background: #28a745; color: #fff; }
+  .badge.fail { background: #dc3545; color: #fff; }
+  .review { margin-top: 18px; display: grid; gap: 8px; }
+  .review-item { padding: 10px 12px; border-radius: 4px; background: #f8f9fa; font-size: 15px; border-left: 4px solid #dc3545; }
+  .review-item.right { border-left-color: #28a745; }
+  .review-item .ans { color: var(--muted); font-size: 14px; }
+
+  table.summary { width: 100%; border-collapse: collapse; margin-top: 14px; }
+  table.summary th, table.summary td { text-align: left; padding: 10px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  table.summary th { width: 38%; color: var(--muted); font-weight: 600; font-size: 15px; }
+  .check { display: flex; gap: 10px; align-items: flex-start; margin-top: 16px; font-size: 15px; }
+  .check input { margin-top: 4px; }
+
+  .confirmed { text-align: center; }
+  .stamp { display: inline-block; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--ok); border: 3px solid var(--ok); border-radius: 6px; padding: 4px 14px; transform: rotate(-3deg); margin-bottom: 14px; }
+  .code-box { margin: 20px auto 8px; max-width: 420px; border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); border-top: 3px solid var(--yellow); background: #fff; }
+  .code-label { background: var(--maroon); color: #fff; padding: 9px; font-size: 13px; letter-spacing: 1px; text-transform: uppercase; }
+  .code-value { font-family: "IBM Plex Mono", monospace; font-weight: 600; font-size: 32px; letter-spacing: 3px; margin: 14px 0 10px; color: var(--maroon); }
+  .code-box .btn { margin-bottom: 16px; }
+  .meta-row { display: flex; justify-content: center; gap: 22px; flex-wrap: wrap; font-size: 15px; color: var(--muted); margin-top: 10px; }
+  .meta-row b { color: var(--ink); font-family: "IBM Plex Mono", monospace; }
+  .steps-back { text-align: left; max-width: 520px; margin: 22px auto 0; background: #f8f9fa; border-left: 4px solid var(--yellow); border-radius: 4px; padding: 12px 18px; font-size: 15px; }
+  .steps-back ol { margin: 6px 0 0; padding-left: 20px; }
+  .db-status { font-size: 14px; color: var(--muted); margin-top: 12px; }
+
+  @media (max-width: 991px) {
+    .main { margin-left: 0; }
+    .sidebar { transform: translateX(-100%); }
+    body.sidebar-open .sidebar { transform: none; }
+    body.sidebar-open .backdrop { display: block; position: fixed; inset: 30px 0 0 0; background: rgba(0,0,0,.4); z-index: 35; }
+    .dash-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 720px) {
+    .levels { grid-template-columns: 1fr; }
+    .grid2 { grid-template-columns: 1fr; }
+    .stepper .lbl { display: none; }
+    .content { padding: 16px 12px 32px; }
+    .panel-body { padding: 16px; }
+    .page-title { font-size: 1.6rem; }
+    .code-value { font-size: 26px; }
+    .sy { display: none; }
+    .sim-notice .full { display: none; }
+    .sim-notice .short { display: inline; }
+    table.grades th:nth-child(2), table.grades td:nth-child(2),
+    table.grades th:nth-child(5), table.grades td:nth-child(5) { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="sim-notice"><span class="full">Game simulation for <b>Brahman Origins</b> — not the official University of Batangas portal. Never enter a real password.</span><span class="short">Brahman Origins game simulation · not the official UB portal</span></div>
+
+<aside class="sidebar" id="sidebar" aria-label="Main menu">
+  <div class="brand">
+    <svg viewBox="0 0 48 48" aria-hidden="true">
+      <circle cx="24" cy="24" r="22" fill="#ffc107" stroke="#e0a800" stroke-width="2"/>
+      <circle cx="24" cy="24" r="16" fill="none" stroke="#77263a" stroke-width="1.5" stroke-dasharray="2 2"/>
+      <text x="24" y="30" text-anchor="middle" font-family="Source Sans 3, sans-serif" font-weight="700" font-size="16" fill="#77263a">BO</text>
+    </svg>
+    <span>e-Brahman</span>
+  </div>
+  <nav class="menu">
+    <button class="nav-item" data-page="dashboard">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 4a10 10 0 0 0-10 10 9.9 9.9 0 0 0 1.4 5.1l.3.4h16.6l.3-.4A9.9 9.9 0 0 0 22 14 10 10 0 0 0 12 4Zm0 2.2a1.1 1.1 0 1 1 0 2.2 1.1 1.1 0 0 1 0-2.2Zm-5.8 2.4a1.1 1.1 0 1 1 0 2.2 1.1 1.1 0 0 1 0-2.2Zm11.6 0a1.1 1.1 0 1 1 0 2.2 1.1 1.1 0 0 1 0-2.2ZM4.3 13.3a1.1 1.1 0 1 1 0 2.2 1.1 1.1 0 0 1 0-2.2Zm15.4 0a1.1 1.1 0 1 1 0 2.2 1.1 1.1 0 0 1 0-2.2Zm-4.6-3.6.9.6-2.6 4.1a2 2 0 1 1-1.8-1.1Z"/></svg>
+      Dashboard
+    </button>
+    <button class="nav-item" data-page="enroll">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M9 2h6a1 1 0 0 1 1 1v1h3a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h3V3a1 1 0 0 1 1-1Zm1 2v2h4V4h-4Zm6.3 6.3-1.4-1.4-4.4 4.4-2-2-1.4 1.4 3.4 3.4 5.8-5.8Z"/></svg>
+      Online Enrollment
+    </button>
+    <button class="nav-item" data-page="exit">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M10 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h5v-2H5V5h5V3Zm5.6 4.4-1.4 1.4 2.2 2.2H8v2h8.4l-2.2 2.2 1.4 1.4L20.2 12l-4.6-4.6Z"/></svg>
+      Back to Game
+    </button>
+  </nav>
+  <div class="sidebar-foot">Brahman Origins · Lipa Campus</div>
+</aside>
+<div class="backdrop" id="backdrop"></div>
+
+<div class="main">
+  <header class="topbar">
+    <button class="icon-btn" id="menu-toggle" aria-label="Toggle menu">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 6h18v2H3V6Zm0 5h18v2H3v-2Zm0 5h18v2H3v-2Z"/></svg>
+    </button>
+    <div class="topbar-right">
+      <span class="sy" id="sy-chip">A.Y. 2026–2027</span>
+      <button class="icon-btn" id="fullscreen" aria-label="Full screen">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4 4h6v2H7.4l3.3 3.3-1.4 1.4L6 7.4V10H4V4Zm10 0h6v6h-2V7.4l-3.3 3.3-1.4-1.4L16.6 6H14V4ZM9.3 13.3l1.4 1.4L7.4 18H10v2H4v-6h2v2.6l3.3-3.3Zm5.4 0 3.3 3.3V14h2v6h-6v-2h2.6l-3.3-3.3 1.4-1.4Z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <div class="content">
+    <h1 class="page-title" id="page-title">Dashboard</h1>
+
+    <div id="page-dashboard"></div>
+
+    <div id="page-enroll" hidden>
+      <section class="panel">
+        <div class="panel-header">Online Enrollment <span class="sub" id="enroll-sub"></span></div>
+        <div class="panel-body">
+          <ol class="stepper" id="stepper" aria-label="Enrollment steps"></ol>
+          <div id="view"></div>
+        </div>
+      </section>
+    </div>
+
+    <div id="page-exit" hidden>
+      <section class="panel panel-outline">
+        <div class="panel-body">
+          <h2>Return to Brahman Origins</h2>
+          <p class="lead">Your enrollment is saved in this browser. Close this tab, go back to the game window, and type your enrollment code on the Enrollment screen.</p>
+          <div class="actions" style="justify-content:flex-start"><button class="btn" id="exit-dash">Go to Dashboard</button></div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <footer class="app-foot">Brahman Origins · capstone game project · enrollment records here are for gameplay only</footer>
+</div>
+
+<script>
+/* =====================================================================
+   SETTINGS — change these to fit your project
+   ===================================================================== */
+const CONFIG = {
+  // MUST be exactly the same text as SECRET in EnrollmentCode.cs (Unity).
+  SECRET: "BRAHMAN-ORIGINS-2026",
+  QUESTIONS_PER_EXAM: 10,
+  PASSING_SCORE: 7,            // out of 10
+  EXAM_MINUTES: 10,            // 0 = no timer
+  SCHOOL_YEAR: "2026–2027",
+  REQUIRED_EMAIL_DOMAIN: "",   // e.g. "ub.edu.ph" to only accept school emails. Empty = any email.
+
+  // Optional: save every enrollment to Supabase. Leave empty to skip.
+  SUPABASE_URL: "",            // e.g. "https://abcd1234.supabase.co"
+  SUPABASE_KEY: "",            // your anon / publishable key (NEVER the service_role key)
+
+  SHS_STRANDS: [
+    "STEM — Science, Technology, Engineering and Mathematics",
+    "ABM — Accountancy, Business and Management",
+    "HUMSS — Humanities and Social Sciences",
+    "GAS — General Academic Strand",
+    "TVL — Technical-Vocational-Livelihood (ICT)"
+  ],
+  // Edit this list to match the programs actually offered at Lipa Campus.
+  COLLEGE_PROGRAMS: [
+    "BS Information Technology",
+    "BS Computer Science",
+    "BS Nursing",
+    "BS Accountancy",
+    "BS Business Administration",
+    "BS Criminology",
+    "BS Hospitality Management",
+    "BS Psychology",
+    "Bachelor of Secondary Education"
+  ]
+};
+
+/* =====================================================================
+   YEAR LEVELS — the player always starts at Grade 7 and moves up one level
+   at a time. "admission: true" = new student (admission exam, then enroll).
+   All other levels = returning student (enroll only).
+   The keys (G7 ... Y4) MUST match LevelKeys in GameProgress.cs (Unity).
+   ===================================================================== */
+const LEVELS = [
+  { key: "G7",  name: "Grade 7",  short: "G7",     dept: "Junior High School", stage: "JHS", admission: true },
+  { key: "G8",  name: "Grade 8",  short: "G8",     dept: "Junior High School", stage: "JHS" },
+  { key: "G9",  name: "Grade 9",  short: "G9",     dept: "Junior High School", stage: "JHS" },
+  { key: "G10", name: "Grade 10", short: "G10",    dept: "Junior High School", stage: "JHS" },
+  { key: "G11", name: "Grade 11", short: "G11",    dept: "Senior High School", stage: "SHS", admission: true },
+  { key: "G12", name: "Grade 12", short: "G12",    dept: "Senior High School", stage: "SHS" },
+  { key: "Y1",  name: "1st Year", short: "1st Yr", dept: "College",            stage: "COL", admission: true },
+  { key: "Y2",  name: "2nd Year", short: "2nd Yr", dept: "College",            stage: "COL" },
+  { key: "Y3",  name: "3rd Year", short: "3rd Yr", dept: "College",            stage: "COL" },
+  { key: "Y4",  name: "4th Year", short: "4th Yr", dept: "College",            stage: "COL" }
+];
+const DEPTS = {
+  JHS: { exam: "JHS Admission Exam", examCovers: "Grade 6 Math, Science, English, Filipino and AP",
+         trackLabel: null, prevSchool: "Elementary school last attended" },
+  SHS: { exam: "SHS Admission Exam", examCovers: "Grade 10 Math, Science, English, Filipino and AP",
+         trackLabel: "Strand", prevSchool: "Junior high school last attended" },
+  COL: { exam: "College Admission Test", examCovers: "math, science, English, research and logic",
+         trackLabel: "Program", prevSchool: "Senior high school last attended" }
+};
+const LEGACY_KEYS = { JHS: "G7", SHS: "G11", COL: "Y1" }; // old links still work
+function levelIndex(key) { return LEVELS.findIndex(L => L.key === key); }
+
+/* =====================================================================
+   ADMISSION EXAM QUESTION BANKS — one per department (Grade 7, Grade 11, 1st Year).
+   15 questions each; 10 are picked at random every attempt.
+   "a" is the index (0-3) of the correct choice in "c".
+   ===================================================================== */
+const BANK = {
+  JHS: [
+    { s: "Math", q: "What is 3/4 + 1/8?", c: ["7/8", "4/12", "1", "5/8"], a: 0 },
+    { s: "Math", q: "A notebook costs ₱35. How much do 6 notebooks cost?", c: ["₱180", "₱210", "₱200", "₱215"], a: 1 },
+    { s: "Math", q: "What is 25% of 240?", c: ["48", "24", "60", "96"], a: 2 },
+    { s: "Math", q: "What is the perimeter of a rectangle that is 8 cm long and 5 cm wide?", c: ["40 cm", "13 cm", "30 cm", "26 cm"], a: 3 },
+    { s: "Science", q: "Which part of a plant makes food through photosynthesis?", c: ["Leaves", "Roots", "Stem", "Flower"], a: 0 },
+    { s: "Science", q: "Water changing from liquid to gas is called…", c: ["Condensation", "Evaporation", "Freezing", "Melting"], a: 1 },
+    { s: "Science", q: "Which planet is closest to the Sun?", c: ["Venus", "Earth", "Mercury", "Mars"], a: 2 },
+    { s: "English", q: "Choose the correct verb: \"She ___ to school every day.\"", c: ["walk", "walking", "have walk", "walks"], a: 3 },
+    { s: "English", q: "Which word means almost the same as \"enormous\"?", c: ["huge", "tiny", "quick", "gentle"], a: 0 },
+    { s: "English", q: "Which of these is a proper noun?", c: ["city", "Batangas", "river", "school"], a: 1 },
+    { s: "Filipino", q: "Ano ang kasingkahulugan ng salitang \"masaya\"?", c: ["malungkot", "galit", "maligaya", "pagod"], a: 2 },
+    { s: "AP", q: "Who wrote the novel \"Noli Me Tangere\"?", c: ["Andrés Bonifacio", "Apolinario Mabini", "Emilio Aguinaldo", "José Rizal"], a: 3 },
+    { s: "AP", q: "What is the capital city of the Philippines?", c: ["Manila", "Quezon City", "Cebu City", "Batangas City"], a: 0 },
+    { s: "AP", q: "Batangas belongs to which region?", c: ["MIMAROPA", "CALABARZON (Region IV-A)", "Bicol Region", "Central Luzon"], a: 1 },
+    { s: "Logic", q: "What number comes next: 2, 4, 8, 16, ___?", c: ["24", "20", "32", "30"], a: 2 }
+  ],
+  SHS: [
+    { s: "Math", q: "Solve for x: 2x + 7 = 19", c: ["6", "13", "5", "12"], a: 0 },
+    { s: "Math", q: "What are the roots of x² − 5x + 6 = 0?", c: ["−2 and −3", "2 and 3", "1 and 6", "−1 and 6"], a: 1 },
+    { s: "Math", q: "What is the next term of the arithmetic sequence 5, 9, 13, 17, ___?", c: ["20", "22", "21", "25"], a: 2 },
+    { s: "Math", q: "What is the probability of rolling a 4 on a fair six-sided die?", c: ["1/4", "4/6", "1/3", "1/6"], a: 3 },
+    { s: "Science", q: "What is the SI unit of force?", c: ["Newton", "Joule", "Watt", "Pascal"], a: 0 },
+    { s: "Science", q: "Which plate boundary forms when two plates move toward each other?", c: ["Divergent", "Convergent", "Transform", "Passive"], a: 1 },
+    { s: "Science", q: "In a plant or animal cell, most of the DNA is found in the…", c: ["Ribosome", "Cell membrane", "Nucleus", "Vacuole"], a: 2 },
+    { s: "Science", q: "What is the chemical formula of table salt?", c: ["KCl", "NaOH", "H₂O", "NaCl"], a: 3 },
+    { s: "English", q: "\"The wind whispered through the trees.\" What figure of speech is this?", c: ["Personification", "Simile", "Hyperbole", "Onomatopoeia"], a: 0 },
+    { s: "English", q: "Which sentence is in the passive voice?", c: ["The group finished the project.", "The project was finished by the group.", "The group is finishing the project.", "The group will finish the project."], a: 1 },
+    { s: "English", q: "The main idea of a paragraph is usually stated in its…", c: ["title", "supporting details", "topic sentence", "last word"], a: 2 },
+    { s: "Filipino", q: "Sino ang may-akda ng \"Florante at Laura\"?", c: ["José Rizal", "Lope K. Santos", "Severino Reyes", "Francisco Balagtas"], a: 3 },
+    { s: "AP", q: "The 1987 Philippine Constitution was ratified during the term of which president?", c: ["Corazon Aquino", "Fidel Ramos", "Ferdinand Marcos", "Joseph Estrada"], a: 0 },
+    { s: "AP", q: "According to the law of demand, when price goes up, quantity demanded…", c: ["goes up", "goes down", "stays the same", "doubles"], a: 1 },
+    { s: "Careers", q: "Which SHS strand focuses on Science, Technology, Engineering and Mathematics?", c: ["ABM", "HUMSS", "STEM", "GAS"], a: 2 }
+  ],
+  COL: [
+    { s: "Math", q: "If f(x) = 2x² − 3, what is f(3)?", c: ["15", "9", "33", "12"], a: 0 },
+    { s: "Math", q: "Simplify (x³)(x⁴).", c: ["x¹²", "x⁷", "2x⁷", "x"], a: 1 },
+    { s: "Math", q: "What is the simple interest on ₱10,000 at 5% per year for 3 years?", c: ["₱500", "₱3,000", "₱1,500", "₱1,576.25"], a: 2 },
+    { s: "Statistics", q: "What is the mean of 4, 8, 6, 10 and 2?", c: ["5", "8", "30", "6"], a: 3 },
+    { s: "Science", q: "Which organelle is known as the powerhouse of the cell?", c: ["Mitochondrion", "Golgi apparatus", "Ribosome", "Lysosome"], a: 0 },
+    { s: "Science", q: "A bus travels 150 km in 2.5 hours. What is its average speed?", c: ["375 km/h", "60 km/h", "50 km/h", "75 km/h"], a: 1 },
+    { s: "Science", q: "Which gas do plants mainly take in for photosynthesis?", c: ["Oxygen", "Nitrogen", "Carbon dioxide", "Hydrogen"], a: 2 },
+    { s: "English", q: "Which sentence is punctuated correctly?", c: ["However the results, were inconclusive.", "However; the results were inconclusive.", "However the results were, inconclusive.", "However, the results were inconclusive."], a: 3 },
+    { s: "English", q: "The word \"ubiquitous\" means…", c: ["found everywhere", "very rare", "very old", "dangerous"], a: 0 },
+    { s: "Research", q: "In an experiment, the variable the researcher changes on purpose is the…", c: ["dependent variable", "independent variable", "controlled variable", "extraneous variable"], a: 1 },
+    { s: "Research", q: "Which of these is a primary source?", c: ["A textbook summary", "An encyclopedia entry", "An original interview transcript", "A review article"], a: 2 },
+    { s: "Logic", q: "All students in Room 3 are enrolled. Ana is in Room 3. Which conclusion is valid?", c: ["Ana is not enrolled.", "Some students are not enrolled.", "It cannot be determined.", "Ana is enrolled."], a: 3 },
+    { s: "ICT", q: "Which of these is an input device?", c: ["Keyboard", "Monitor", "Printer", "Speaker"], a: 0 },
+    { s: "Civics", q: "Which document is the fundamental law of the Philippines?", c: ["The Civil Code", "The 1987 Constitution", "The Revised Penal Code", "The Labor Code"], a: 1 },
+    { s: "Math", q: "3 out of 12 is what percent?", c: ["30%", "36%", "25%", "4%"], a: 2 }
+  ]
+};
+
+/* =====================================================================
+   ENROLLMENT CODE — must match EnrollmentCode.cs in Unity exactly.
+   ===================================================================== */
+const ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // 32 chars, no 0/O/1/I
+
+function hash32(text) {
+  let h = 5381;
+  for (let i = 0; i < text.length; i++) {
+    h = ((h * 33) ^ text.charCodeAt(i)) >>> 0;
+  }
+  return h;
+}
+function makeEnrollmentCode(levelKey, playerId) {
+  let h = hash32(levelKey + "|" + playerId + "|" + CONFIG.SECRET);
+  let out = "";
+  for (let i = 0; i < 6; i++) { out += ALPHABET[h % 32]; h = Math.floor(h / 32); }
+  return out;
+}
+// One student number per player, kept from Grade 7 to 4th Year.
+function makeStudentNo(playerId) {
+  return "2026-" + (hash32("SN|" + playerId) % 90000 + 10000);
+}
+function cleanId(v) { return (v || "").toUpperCase().replace(/[^A-Z0-9]/g, ""); }
+function validPlayerId(v) { return /^[A-Z2-9]{6}$/.test(v) && [...v].every(ch => ALPHABET.includes(ch)); }
+
+/* =====================================================================
+   STATE
+   ===================================================================== */
+const params = new URLSearchParams(location.search);
+const urlKeyRaw = (params.get("level") || "").toUpperCase();
+const urlLevel = levelIndex(LEGACY_KEYS[urlKeyRaw] || urlKeyRaw);
+const urlPid = cleanId(params.get("pid"));
+const urlName = (params.get("name") || "").slice(0, 60);
+const fromGame = urlLevel >= 0 && validPlayerId(urlPid);
+
+const state = {
+  step: "start",
+  level: fromGame ? urlLevel : null,   // index into LEVELS
+  playerId: validPlayerId(urlPid) ? urlPid : "",
+  pidLocked: validPlayerId(urlPid),
+  gameName: urlName,
+  exam: null,          // { items, answers, current, endsAt, timerId }
+  score: null,
+  info: { fullName: urlName, email: "", track: "", prevSchool: "" },
+  result: null,
+  justEnrolled: false
+};
+
+function storeKey(levelKey, pid) { return "ebrahman2:" + levelKey + ":" + pid; }
+function loadSaved(idx, pid) {
+  try { const raw = localStorage.getItem(storeKey(LEVELS[idx].key, pid)); return raw ? JSON.parse(raw) : null; } catch (e) { return null; }
+}
+function saveRecord(rec) {
+  try { localStorage.setItem(storeKey(rec.levelKey, rec.playerId), JSON.stringify(rec)); } catch (e) { /* storage unavailable */ }
+}
+function allRecords(pid) { return LEVELS.map((_, i) => pid ? loadSaved(i, pid) : null); }
+
+// The level this player should enroll in next: the one after their last enrollment.
+// If the game sent a level they haven't enrolled in yet, that level wins (the game knows best).
+function currentLevel() {
+  if (!state.playerId) return null;
+  const recs = allRecords(state.playerId);
+  let last = -1;
+  recs.forEach((r, i) => { if (r) last = i; });
+  const next = last + 1; // 10 = finished all levels
+  return fromGame ? Math.max(urlLevel, next) : next;
+}
+
+// Fill the form with details from the previous enrollment (returning students).
+function prefillInfo() {
+  const idx = state.level, L = LEVELS[idx], info = state.info;
+  const recs = allRecords(state.playerId);
+  let prev = null;
+  for (let i = idx - 1; i >= 0; i--) { if (recs[i]) { prev = recs[i]; break; } }
+  if (!prev) return;
+  if (!info.fullName) info.fullName = prev.fullName || "";
+  if (!info.email) info.email = prev.email || "";
+  if (!info.track && !L.admission && LEVELS[prev.levelIndex].stage === L.stage) info.track = prev.track || "";
+  if (!info.prevSchool && L.admission) info.prevSchool = "University of Batangas — Lipa Campus";
+}
+
+/* =====================================================================
+   HELPERS
+   ===================================================================== */
+const $ = (sel) => document.querySelector(sel);
+function esc(s) { return String(s).replace(/[&<>"']/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch])); }
+function shuffle(arr) { const a = arr.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+
+const STEP_LABELS = { start: "Start", exam: "Admission Exam", info: "Student Info", review: "Review", done: "Enrolled" };
+function stepsFor(idx) {
+  const admission = idx === null || idx >= LEVELS.length || LEVELS[idx].admission;
+  return admission ? ["start", "exam", "info", "review", "done"] : ["start", "info", "review", "done"];
+}
+function stepNum(step) { return stepsFor(state.level).indexOf(step) + 1; }
+function renderStepper() {
+  const steps = stepsFor(state.level), cur = steps.indexOf(state.step);
+  $("#stepper").style.gridTemplateColumns = `repeat(${steps.length}, 1fr)`;
+  $("#stepper").innerHTML = steps.map((s, i) => {
+    const cls = i < cur ? "done" : i === cur ? "active" : "";
+    return `<li class="${cls}"><div class="bar"></div><span class="num">${i + 1}</span><span class="lbl">${STEP_LABELS[s]}</span></li>`;
+  }).join("");
+}
+function go(step) {
+  state.step = step;
+  showPage("enroll", false);
+  const L = state.level !== null ? LEVELS[state.level] : null;
+  $("#enroll-sub").textContent = L ? `${L.name} · ${L.admission ? "New student" : "Returning student"}` : "";
+  renderStepper();
+  const views = { start: viewStart, exam: viewExam, info: viewInfo, review: viewReview, done: viewConfirmed };
+  views[step]();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function pathStrip(cur) {
+  return `<ol class="path" aria-label="Year level progress">${LEVELS.map((L, i) =>
+    `<li class="${i < cur ? "done" : i === cur ? "cur" : ""}">${L.short}</li>`).join("")}</ol>`;
+}
+
+/* =====================================================================
+   STEP — START (no level choice: the level is decided for the player)
+   ===================================================================== */
+function viewStart() {
+  // 1) No Player ID yet (page opened by hand)
+  if (!state.playerId) {
+    $("#view").innerHTML = `
+      <section class="card">
+        <div class="eyebrow">Step 1 · Start</div>
+        <h2>Who's enrolling?</h2>
+        <p class="lead">Enter the Player ID shown on the Enrollment screen in Brahman Origins. We'll open the year level you're due for — everyone starts at Grade 7.</p>
+        <div class="grid2" style="margin-top:18px">
+          <div class="field">
+            <label for="pid">Player ID</label>
+            <input id="pid" maxlength="6" placeholder="e.g. K7PQ2M">
+          </div>
+          <div class="field">
+            <label for="gname">In-game name</label>
+            <input id="gname" maxlength="60" placeholder="Your character's name" value="${esc(state.gameName)}">
+          </div>
+        </div>
+        <div class="error" id="err1"></div>
+        <div class="actions"><button class="btn" id="pid-go">Continue</button></div>
+      </section>`;
+    $("#pid").addEventListener("input", e => { e.target.value = cleanId(e.target.value).slice(0, 6); });
+    $("#pid-go").addEventListener("click", () => {
+      const pid = cleanId($("#pid").value);
+      if (!validPlayerId(pid)) { $("#err1").textContent = "Enter the 6-character Player ID from the game (letters and digits 2–9)."; return; }
+      state.playerId = pid;
+      state.gameName = $("#gname").value.trim();
+      if (!state.info.fullName) state.info.fullName = state.gameName;
+      state.level = currentLevel();
+      go("start");
+    });
+    return;
+  }
+
+  if (state.level === null) state.level = currentLevel();
+
+  // 2) Every level finished
+  if (state.level >= LEVELS.length) {
+    $("#view").innerHTML = `
+      <section class="card">
+        <div class="eyebrow">All done</div>
+        <h2>You've enrolled in every year level</h2>
+        <p class="lead">From Grade 7 to 4th Year — there's nothing left to enroll in. Finish your remaining minigames in Brahman Origins and graduate!</p>
+        ${pathStrip(LEVELS.length)}
+        <div class="actions"><button class="btn" id="to-dash2">Go to Dashboard</button></div>
+      </section>`;
+    $("#to-dash2").addEventListener("click", () => showPage("dashboard"));
+    return;
+  }
+
+  const idx = state.level, L = LEVELS[idx], D = DEPTS[L.stage];
+  const saved = loadSaved(idx, state.playerId);
+  const prevName = idx > 0 ? LEVELS[idx - 1].name : null;
+  const intro = L.admission
+    ? (idx === 0
+        ? `Welcome to UB Lipa! Every Brahman starts here. As a <b>new student</b>, you must pass the <b>${D.exam}</b> before you can enroll.`
+        : `You finished ${prevName}. Moving up to <b>${L.dept}</b> makes you a <b>new student</b> again, so you must pass the <b>${D.exam}</b> before you can enroll.`)
+    : `Welcome back! You finished ${prevName}. As a <b>returning student</b>, you don't need an admission exam — just confirm your details and enroll.`;
+
+  $("#view").innerHTML = `
+    <section class="card">
+      <div class="eyebrow">Step 1 · Start</div>
+      <h1>${L.admission ? "Admission & Enrollment" : "Enrollment"}</h1>
+      <div class="next-card">
+        <div>
+          <div class="small-label">Your year level for A.Y. ${esc(CONFIG.SCHOOL_YEAR)}</div>
+          <div class="big">${L.name}</div>
+          <div style="color:var(--muted)">${L.dept}</div>
+        </div>
+        <span class="type-badge ${L.admission ? "new" : "ret"}">${L.admission ? "New student" : "Returning student"}</span>
+      </div>
+      ${pathStrip(idx)}
+      <p class="lead" style="margin-top:16px">${intro}</p>
+      ${saved ? `<div class="rules" style="border-left-color:#28a745;background:var(--ok-soft)">
+          <b>You're already enrolled in ${L.name}.</b> <button class="btn ghost sm" id="show-saved" style="margin-left:8px">Show my code</button>
+        </div>` : ""}
+      <div class="grid2" style="margin-top:18px">
+        <div class="field">
+          <label for="pid">Player ID</label>
+          <input id="pid" value="${esc(state.playerId)}" readonly>
+          <div class="hint">${state.pidLocked ? "Filled in by the game." : `Not you? <a href="#" id="change-pid">Change Player ID</a>`}</div>
+        </div>
+        <div class="field">
+          <label for="gname">In-game name</label>
+          <input id="gname" maxlength="60" placeholder="Your character's name" value="${esc(state.gameName)}">
+        </div>
+      </div>
+      ${L.admission ? `
+      <div class="rules">
+        <b>${D.exam} rules</b>
+        <ul>
+          <li>${CONFIG.QUESTIONS_PER_EXAM} multiple-choice questions on ${D.examCovers}, picked at random.</li>
+          <li>You need at least <b>${CONFIG.PASSING_SCORE}/${CONFIG.QUESTIONS_PER_EXAM}</b> to pass and continue to enrollment.</li>
+          ${CONFIG.EXAM_MINUTES > 0 ? `<li>Time limit: ${CONFIG.EXAM_MINUTES} minutes. The exam submits itself when time runs out.</li>` : ""}
+          <li>If you fail, you can retake it with a new set of questions.</li>
+        </ul>
+      </div>` : `
+      <div class="rules"><b>Year levels open one at a time.</b> You can't skip ahead — finish ${L.name} in the game before enrolling in the next level.</div>`}
+      <div class="error" id="err1"></div>
+      <div class="actions"><button class="btn" id="start">${L.admission ? "Start admission exam" : "Continue to enrollment"}</button></div>
+    </section>`;
+
+  const showSaved = $("#show-saved");
+  if (showSaved) showSaved.addEventListener("click", () => { state.result = saved; state.justEnrolled = false; go("done"); });
+  const change = $("#change-pid");
+  if (change) change.addEventListener("click", (e) => {
+    e.preventDefault();
+    state.playerId = ""; state.level = null; state.info = { fullName: "", email: "", track: "", prevSchool: "" };
+    go("start");
+  });
+  $("#start").addEventListener("click", () => {
+    state.gameName = $("#gname").value.trim();
+    if (!state.info.fullName) state.info.fullName = state.gameName;
+    prefillInfo();
+    if (L.admission) startExam(); else go("info");
+  });
+}
+
+/* =====================================================================
+   STEP — ADMISSION EXAM (Grade 7, Grade 11 and 1st Year only)
+   ===================================================================== */
+function startExam() {
+  const picked = shuffle(BANK[LEVELS[state.level].stage]).slice(0, CONFIG.QUESTIONS_PER_EXAM).map(item => {
+    const order = shuffle([0, 1, 2, 3]);
+    return { s: item.s, q: item.q, c: order.map(i => item.c[i]), a: order.indexOf(item.a) };
+  });
+  stopTimer();
+  state.exam = {
+    items: picked,
+    answers: new Array(picked.length).fill(null),
+    current: 0,
+    endsAt: CONFIG.EXAM_MINUTES > 0 ? Date.now() + CONFIG.EXAM_MINUTES * 60000 : null,
+    timerId: null
+  };
+  state.score = null;
+  if (state.exam.endsAt) state.exam.timerId = setInterval(tick, 500);
+  go("exam");
+}
+function stopTimer() { if (state.exam && state.exam.timerId) { clearInterval(state.exam.timerId); state.exam.timerId = null; } }
+function tick() {
+  const el = $("#timer");
+  if (!state.exam || !state.exam.endsAt || state.score !== null) return;
+  const left = Math.max(0, state.exam.endsAt - Date.now());
+  if (el) {
+    const m = Math.floor(left / 60000), s = Math.floor((left % 60000) / 1000);
+    el.textContent = `${m}:${String(s).padStart(2, "0")}`;
+    el.classList.toggle("low", left < 60000);
+  }
+  if (left <= 0) submitExam();
+}
+function viewExam() {
+  if (state.score !== null) return viewResults();
+  const ex = state.exam, item = ex.items[ex.current], n = ex.items.length;
+  const D = DEPTS[LEVELS[state.level].stage];
+  const answeredCount = ex.answers.filter(a => a !== null).length;
+  const last = ex.current === n - 1;
+  $("#view").innerHTML = `
+    <section class="card">
+      <div class="exam-head">
+        <div>
+          <div class="eyebrow">Step ${stepNum("exam")} · ${D.exam}</div>
+          <h2>Question ${ex.current + 1} of ${n}</h2>
+        </div>
+        ${ex.endsAt ? `<div class="timer" id="timer" aria-label="Time left">--:--</div>` : ""}
+      </div>
+      <div class="progress" aria-hidden="true"><div style="width:${(answeredCount / n) * 100}%"></div></div>
+      <span class="subject">${esc(item.s)}</span>
+      <p class="question">${esc(item.q)}</p>
+      <div class="choices" role="radiogroup" aria-label="Choices">
+        ${item.c.map((c, i) => `
+          <button class="choice" role="radio" data-i="${i}" aria-checked="${ex.answers[ex.current] === i}">
+            <span class="key">${"ABCD"[i]}</span><span>${esc(c)}</span>
+          </button>`).join("")}
+      </div>
+      <div class="dots" aria-label="Jump to question">
+        ${ex.items.map((_, i) => `<button class="dot ${ex.answers[i] !== null ? "answered" : ""} ${i === ex.current ? "current" : ""}" data-q="${i}">${i + 1}</button>`).join("")}
+      </div>
+      <div class="actions">
+        <button class="btn ghost" id="prev" ${ex.current === 0 ? "disabled" : ""}>Previous</button>
+        ${last ? `<button class="btn gold" id="submit">Submit exam</button>` : `<button class="btn" id="next">Next</button>`}
+      </div>
+    </section>`;
+  tick();
+  document.querySelectorAll(".choice").forEach(b => b.addEventListener("click", () => {
+    ex.answers[ex.current] = Number(b.dataset.i);
+    if (!last) { ex.current++; }
+    viewExam();
+  }));
+  document.querySelectorAll(".dot").forEach(b => b.addEventListener("click", () => { ex.current = Number(b.dataset.q); viewExam(); }));
+  $("#prev").addEventListener("click", () => { ex.current--; viewExam(); });
+  const next = $("#next"); if (next) next.addEventListener("click", () => { ex.current++; viewExam(); });
+  const submit = $("#submit"); if (submit) submit.addEventListener("click", () => {
+    const blank = ex.answers.filter(a => a === null).length;
+    if (blank > 0 && !confirm(`You still have ${blank} unanswered question(s). Submit anyway?`)) return;
+    submitExam();
+  });
+}
+document.addEventListener("keydown", (e) => {
+  if (state.step !== "exam" || state.score !== null || currentPage !== "enroll") return;
+  if (e.target && /^(INPUT|SELECT|TEXTAREA)$/.test(e.target.tagName)) return;
+  const k = e.key.toUpperCase();
+  if (k.length === 1 && "ABCD".includes(k)) { const btn = document.querySelector(`.choice[data-i="${"ABCD".indexOf(k)}"]`); if (btn) btn.click(); }
+});
+function submitExam() {
+  if (state.score !== null) return;
+  stopTimer();
+  const ex = state.exam;
+  state.score = ex.items.reduce((sum, item, i) => sum + (ex.answers[i] === item.a ? 1 : 0), 0);
+  if (state.step === "exam") viewResults();
+}
+function viewResults() {
+  const ex = state.exam, passed = state.score >= CONFIG.PASSING_SCORE, L = LEVELS[state.level];
+  $("#view").innerHTML = `
+    <section class="card">
+      <div class="eyebrow">Step ${stepNum("exam")} · Exam result</div>
+      <div class="score-ring">
+        <div class="score-big">${state.score}<span style="font-size:28px;color:var(--muted)">/${ex.items.length}</span></div>
+        <div>
+          <span class="badge ${passed ? "pass" : "fail"}">${passed ? "Passed" : "Did not pass"}</span>
+          <p class="lead" style="margin-top:8px">${passed
+            ? `Congratulations! You're admitted to ${L.dept}. You can now proceed to enrollment for ${L.name}.`
+            : `You need at least ${CONFIG.PASSING_SCORE} correct answers to be admitted. Review your answers below, then try again with a new set of questions.`}</p>
+        </div>
+      </div>
+      <div class="review">
+        ${ex.items.map((item, i) => {
+          const ok = ex.answers[i] === item.a;
+          const yours = ex.answers[i] === null ? "No answer" : item.c[ex.answers[i]];
+          return `<div class="review-item ${ok ? "right" : ""}">
+            <div><b>${i + 1}.</b> ${esc(item.q)}</div>
+            <div class="ans">Your answer: ${esc(yours)}${ok ? " ✓" : ` · Correct: <b>${esc(item.c[item.a])}</b>`}</div>
+          </div>`;
+        }).join("")}
+      </div>
+      <div class="actions">
+        ${passed
+          ? `<button class="btn" id="to-info">Proceed to enrollment</button>`
+          : `<button class="btn ghost" id="back1">Back</button><button class="btn" id="retake">Retake exam</button>`}
+      </div>
+    </section>`;
+  if (passed) $("#to-info").addEventListener("click", () => go("info"));
+  else {
+    $("#retake").addEventListener("click", startExam);
+    $("#back1").addEventListener("click", () => go("start"));
+  }
+}
+
+/* =====================================================================
+   STEP — STUDENT INFO
+   ===================================================================== */
+function viewInfo() {
+  const L = LEVELS[state.level], D = DEPTS[L.stage], info = state.info;
+  const options = L.stage === "SHS" ? CONFIG.SHS_STRANDS : L.stage === "COL" ? CONFIG.COLLEGE_PROGRAMS : [];
+  const prefilled = !L.admission && info.email;
+  $("#view").innerHTML = `
+    <section class="card">
+      <div class="eyebrow">Step ${stepNum("info")} · Student information</div>
+      <h2>${L.admission ? "Tell us about yourself" : "Confirm your details"}</h2>
+      <p class="lead">${prefilled
+        ? `We filled in your details from last school year. Check that they're still correct.`
+        : `Use your in-game details. Do not enter real ID numbers or passwords.`}</p>
+      <div class="grid2" style="margin-top:18px">
+        <div class="field full">
+          <label for="fullName">Full name</label>
+          <input id="fullName" maxlength="80" value="${esc(info.fullName)}" placeholder="Juan Dela Cruz">
+        </div>
+        <div class="field ${L.admission ? "" : "full"}">
+          <label for="email">Email${CONFIG.REQUIRED_EMAIL_DOMAIN ? ` (@${esc(CONFIG.REQUIRED_EMAIL_DOMAIN)})` : ""}</label>
+          <input id="email" type="email" maxlength="120" value="${esc(info.email)}" placeholder="${CONFIG.REQUIRED_EMAIL_DOMAIN ? "name@" + esc(CONFIG.REQUIRED_EMAIL_DOMAIN) : "name@example.com"}">
+        </div>
+        ${L.admission ? `
+        <div class="field">
+          <label for="prevSchool">${D.prevSchool}</label>
+          <input id="prevSchool" maxlength="100" value="${esc(info.prevSchool)}">
+        </div>` : ""}
+        ${D.trackLabel ? `
+        <div class="field full">
+          <label for="track">${D.trackLabel}</label>
+          <select id="track">
+            <option value="">Choose your ${D.trackLabel.toLowerCase()}…</option>
+            ${options.map(o => `<option ${info.track === o ? "selected" : ""}>${esc(o)}</option>`).join("")}
+          </select>
+        </div>` : ""}
+      </div>
+      <div class="error" id="err3"></div>
+      <div class="actions">
+        <button class="btn ghost" id="back-start">Back</button>
+        <button class="btn" id="to-review">Review enrollment</button>
+      </div>
+    </section>`;
+  $("#back-start").addEventListener("click", () => go(L.admission && state.score !== null ? "exam" : "start"));
+  $("#to-review").addEventListener("click", () => {
+    const err = $("#err3");
+    info.fullName = $("#fullName").value.trim();
+    info.email = $("#email").value.trim();
+    if (L.admission) info.prevSchool = $("#prevSchool").value.trim();
+    info.track = D.trackLabel ? $("#track").value : "";
+    if (info.fullName.length < 2) { err.textContent = "Please enter your full name."; return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(info.email)) { err.textContent = "Please enter a valid email address."; return; }
+    if (CONFIG.REQUIRED_EMAIL_DOMAIN && !info.email.toLowerCase().endsWith("@" + CONFIG.REQUIRED_EMAIL_DOMAIN.toLowerCase())) {
+      err.textContent = `Please use your @${CONFIG.REQUIRED_EMAIL_DOMAIN} email.`; return;
+    }
+    if (L.admission && !info.prevSchool) { err.textContent = "Please enter the school you last attended."; return; }
+    if (D.trackLabel && !info.track) { err.textContent = `Please choose your ${D.trackLabel.toLowerCase()}.`; return; }
+    go("review");
+  });
+}
+
+/* =====================================================================
+   STEP — REVIEW
+   ===================================================================== */
+function viewReview() {
+  const L = LEVELS[state.level], D = DEPTS[L.stage], info = state.info;
+  const rows = [
+    ["Year level", `${L.name} — ${L.dept}`],
+    ["Student type", L.admission ? "New student" : "Returning student"],
+    ["School year", CONFIG.SCHOOL_YEAR],
+    ["Campus", "Lipa Campus"],
+    ["Player ID", state.playerId],
+    ["Full name", info.fullName],
+    ["Email", info.email],
+    ...(L.admission ? [[D.prevSchool, info.prevSchool]] : []),
+    ...(D.trackLabel ? [[D.trackLabel, info.track]] : []),
+    ["Admission exam", L.admission ? `${state.score}/${state.exam.items.length} (passed)` : "Not required (returning student)"]
+  ];
+  $("#view").innerHTML = `
+    <section class="card">
+      <div class="eyebrow">Step ${stepNum("review")} · Review</div>
+      <h2>Check your enrollment details</h2>
+      <table class="summary">${rows.map(([k, v]) => `<tr><th>${esc(k)}</th><td>${esc(v)}</td></tr>`).join("")}</table>
+      <label class="check"><input type="checkbox" id="agree"> <span>I confirm these details are correct and I am ready to enroll in ${L.name}.</span></label>
+      <div class="actions">
+        <button class="btn ghost" id="edit">Edit details</button>
+        <button class="btn gold" id="enroll" disabled>Confirm enrollment</button>
+      </div>
+    </section>`;
+  $("#agree").addEventListener("change", e => { $("#enroll").disabled = !e.target.checked; });
+  $("#edit").addEventListener("click", () => go("info"));
+  $("#enroll").addEventListener("click", confirmEnrollment);
+}
+
+/* =====================================================================
+   STEP — ENROLLED
+   ===================================================================== */
+function confirmEnrollment() {
+  const L = LEVELS[state.level];
+  const rec = {
+    levelKey: L.key,
+    levelIndex: state.level,
+    playerId: state.playerId,
+    fullName: state.info.fullName,
+    email: state.info.email,
+    track: state.info.track,
+    prevSchool: L.admission ? state.info.prevSchool : "",
+    studentType: L.admission ? "New" : "Returning",
+    examScore: L.admission ? state.score : null,
+    code: makeEnrollmentCode(L.key, state.playerId),
+    studentNo: makeStudentNo(state.playerId),
+    levelName: `${L.name} — ${L.dept}`,
+    enrolledAt: new Date().toISOString()
+  };
+  saveRecord(rec);
+  state.result = rec;
+  state.justEnrolled = true;
+  go("done");
+  sendToSupabase(rec);
+}
+
+async function sendToSupabase(rec) {
+  const el = () => $("#db-status");
+  if (!CONFIG.SUPABASE_URL || !CONFIG.SUPABASE_KEY) {
+    if (el()) el().textContent = "Saved on this device only (Supabase not set up).";
+    return;
+  }
+  const headers = { "apikey": CONFIG.SUPABASE_KEY, "Content-Type": "application/json", "Prefer": "return=minimal" };
+  if (CONFIG.SUPABASE_KEY.startsWith("eyJ")) headers["Authorization"] = "Bearer " + CONFIG.SUPABASE_KEY; // legacy anon JWT
+  try {
+    const res = await fetch(CONFIG.SUPABASE_URL.replace(/\/$/, "") + "/rest/v1/enrollments", {
+      method: "POST",
+      headers,
+      body: JSON.stringify({
+        player_id: rec.playerId, level: rec.levelKey, student_type: rec.studentType,
+        full_name: rec.fullName, email: rec.email, track: rec.track || null,
+        last_school: rec.prevSchool || null, exam_score: rec.examScore,
+        student_no: rec.studentNo, enrollment_code: rec.code
+      })
+    });
+    if (el()) el().textContent = res.ok ? "Enrollment record saved to the database." : `Database save failed (HTTP ${res.status}). Your code still works.`;
+  } catch (e) {
+    if (el()) el().textContent = "Could not reach the database. Your code still works.";
+  }
+}
+
+function viewConfirmed() {
+  const r = state.result, L = LEVELS[r.levelIndex];
+  const full = `${r.levelKey}-${r.code}`;
+  $("#view").innerHTML = `
+    <section class="card confirmed">
+      <div class="stamp">Officially enrolled</div>
+      <h1>${r.studentType === "New" ? "Welcome" : "Welcome back"}, ${esc(r.fullName.split(" ")[0] || r.fullName)}!</h1>
+      <p class="lead">You are enrolled in <b>${esc(r.levelName)}</b> for A.Y. ${esc(CONFIG.SCHOOL_YEAR)}${r.track ? ` · ${esc(r.track.split(" — ")[0])}` : ""}.</p>
+      <div class="code-box">
+        <div class="code-label">Your ${esc(L.name)} enrollment code</div>
+        <div class="code-value" id="code">${esc(full)}</div>
+        <button class="btn gold" id="copy">Copy code</button>
+      </div>
+      <div class="meta-row">
+        <span>Student No. <b>${esc(r.studentNo)}</b></span>
+        <span>Player ID <b>${esc(r.playerId)}</b></span>
+        <span>${r.examScore !== null ? `Admission exam <b>${r.examScore}/${CONFIG.QUESTIONS_PER_EXAM}</b>` : `<b style="font-family:inherit">Returning student</b>`}</span>
+      </div>
+      <div class="steps-back">
+        <b>Go back to Brahman Origins</b>
+        <ol>
+          <li>Return to the game window.</li>
+          <li>On the Enrollment screen, type the code above: <b>${esc(full)}</b> (just the last 6 characters also work).</li>
+          <li>Press <b>Verify</b> to start ${esc(L.name)}.</li>
+        </ol>
+      </div>
+      <div class="db-status" id="db-status">${state.justEnrolled ? "Saving…" : ""}</div>
+      <div class="actions" style="justify-content:center">
+        <button class="btn" id="to-dash">Go to Dashboard</button>
+      </div>
+    </section>`;
+  state.justEnrolled = false;
+  $("#copy").addEventListener("click", async () => {
+    try { await navigator.clipboard.writeText(full); $("#copy").textContent = "Copied!"; }
+    catch (e) { $("#copy").textContent = "Select and copy the code above"; }
+  });
+  $("#to-dash").addEventListener("click", () => showPage("dashboard"));
+}
+
+/* =====================================================================
+   PAGES: Dashboard, Online Enrollment, Back to Game
+   ===================================================================== */
+const PAGE_TITLES = { dashboard: "Dashboard", enroll: "Online Enrollment", exit: "Back to Game" };
+let currentPage = null;
+
+function showPage(name, render = true) {
+  currentPage = name;
+  Object.keys(PAGE_TITLES).forEach(p => { $("#page-" + p).hidden = p !== name; });
+  $("#page-title").textContent = PAGE_TITLES[name];
+  document.querySelectorAll(".nav-item").forEach(b => b.classList.toggle("active", b.dataset.page === name));
+  document.body.classList.remove("sidebar-open");
+  if (!render) return;
+  if (name === "dashboard") renderDashboard();
+  if (name === "enroll") openEnrollment();
+}
+
+// Online Enrollment always opens the player's current level — never a level they pick.
+function openEnrollment() {
+  const unfinished = state.step !== "start" && state.step !== "done";
+  if (unfinished && state.level !== null) { go(state.step); return; }
+  stopTimer();
+  state.exam = null; state.score = null; state.result = null;
+  state.level = currentLevel();
+  go("start");
+}
+
+function initials(name) {
+  const parts = (name || "").trim().split(/\s+/).filter(Boolean);
+  if (!parts.length) return "?";
+  return (parts[0][0] + (parts.length > 1 ? parts[parts.length - 1][0] : "")).toUpperCase();
+}
+
+function renderDashboard() {
+  const pid = state.playerId;
+  const recs = allRecords(pid);
+  const cur = currentLevel();
+  const latest = recs.filter(Boolean).slice(-1)[0];
+  const name = state.info.fullName || (latest && latest.fullName) || state.gameName;
+  const enrolledCount = recs.filter(Boolean).length;
+
+  const rows = LEVELS.map((L, i) => {
+    const r = recs[i];
+    let status, action = "";
+    if (r) { status = `<span class="pill ok">Enrolled</span>`; action = `<button class="btn ghost sm" data-show="${i}">View</button>`; }
+    else if (cur !== null && i < cur) status = `<span class="pill wait">Completed</span>`;
+    else if (cur !== null && i === cur) { status = `<span class="pill next">Next</span>`; action = `<button class="btn sm" data-enroll="${i}">${L.admission ? "Admission exam" : "Enroll"}</button>`; }
+    else status = `<span class="pill locked">Locked</span>`;
+    const exam = !L.admission ? `<span style="color:var(--muted)">Not required</span>` : r ? `${r.examScore}/${CONFIG.QUESTIONS_PER_EXAM}` : "Required";
+    const code = r ? `<span class="mono">${esc(r.levelKey)}-${esc(r.code)}</span>` : "—";
+    return `<tr class="${i === cur ? "row-next" : ""}">
+      <td><b>${L.name}</b><br><span style="color:var(--muted);font-size:14px">${L.dept}</span></td>
+      <td>${L.admission ? "New" : "Returning"}</td><td>${exam}</td><td>${status}</td><td>${code}</td>
+      <td style="text-align:right">${action}</td></tr>`;
+  }).join("");
+
+  $("#page-dashboard").innerHTML = `
+    <div class="dash-grid">
+      <section class="panel panel-outline">
+        <div class="panel-body profile">
+          <div class="avatar" aria-hidden="true">${esc(initials(name))}</div>
+          <div class="profile-name">${name ? esc(name) : "Brahman Student"}</div>
+          <div class="profile-sub">${latest ? esc(latest.levelName) : "Incoming Grade 7"}</div>
+          ${pid ? `
+          <ul class="info-list">
+            <li><b>Player ID</b><span class="mono">${esc(pid)}</span></li>
+            <li><b>Student No.</b><span class="mono">${enrolledCount ? esc(makeStudentNo(pid)) : "—"}</span></li>
+            <li><b>Next to enroll</b><span>${cur >= LEVELS.length ? "All done" : LEVELS[cur].name}</span></li>
+            <li><b>Campus</b><span>Lipa Campus</span></li>
+            <li><b>School Year</b><span>${esc(CONFIG.SCHOOL_YEAR)}</span></li>
+          </ul>
+          ${pathStrip(cur)}` : `
+          <div class="field" style="text-align:left;margin-top:18px">
+            <label for="dash-pid">Player ID</label>
+            <input id="dash-pid" maxlength="6" placeholder="e.g. K7PQ2M">
+            <div class="hint">Shown on the Enrollment screen inside the game.</div>
+          </div>
+          <div class="field" style="text-align:left;margin-top:12px">
+            <label for="dash-name">In-game name</label>
+            <input id="dash-name" maxlength="60" value="${esc(state.gameName)}">
+          </div>
+          <div class="error" id="dash-err"></div>
+          <button class="btn" id="dash-load" style="width:100%">Continue</button>`}
+        </div>
+      </section>
+
+      <div>
+        <section class="panel">
+          <div class="panel-header">Year Levels <span class="sub">${pid ? `${enrolledCount} of ${LEVELS.length} enrolled` : ""}</span></div>
+          <div class="panel-body" style="padding-top:8px;padding-bottom:8px;overflow-x:auto">
+            <table class="grades">
+              <thead><tr><th>Year level</th><th>Student type</th><th>Admission exam</th><th>Status</th><th>Enrollment code</th><th></th></tr></thead>
+              <tbody>${rows}</tbody>
+            </table>
+          </div>
+        </section>
+        <section class="panel">
+          <div class="panel-header">How enrollment works</div>
+          <div class="panel-body how">
+            <ol>
+              <li>Every Brahman starts at <b>Grade 7</b>. Year levels open one at a time — you can't choose or skip a level.</li>
+              <li><b>Grade 7, Grade 11 and 1st Year:</b> you're a new student in that department, so pass the 10-question admission exam (${CONFIG.PASSING_SCORE}/10) first, then enroll.</li>
+              <li><b>All other year levels:</b> you're a returning student — just confirm your details and enroll.</li>
+              <li>Type your enrollment code into the game and press <b>Verify</b> to start the year level.</li>
+            </ol>
+          </div>
+        </section>
+      </div>
+    </div>`;
+
+  document.querySelectorAll("[data-enroll]").forEach(b => b.addEventListener("click", () => {
+    stopTimer();
+    state.level = Number(b.dataset.enroll); state.exam = null; state.score = null; state.result = null;
+    go("start");
+  }));
+  document.querySelectorAll("[data-show]").forEach(b => b.addEventListener("click", () => {
+    state.level = Number(b.dataset.show);
+    state.result = loadSaved(state.level, state.playerId);
+    state.justEnrolled = false;
+    go("done");
+  }));
+  const load = $("#dash-load");
+  if (load) {
+    $("#dash-pid").addEventListener("input", e => { e.target.value = cleanId(e.target.value).slice(0, 6); });
+    load.addEventListener("click", () => {
+      const pid = cleanId($("#dash-pid").value);
+      if (!validPlayerId(pid)) { $("#dash-err").textContent = "Enter the 6-character Player ID from the game."; return; }
+      state.playerId = pid;
+      state.gameName = $("#dash-name").value.trim();
+      if (!state.info.fullName) state.info.fullName = state.gameName;
+      renderDashboard();
+    });
+  }
+}
+
+/* Sidebar, menu toggle and full screen */
+document.querySelectorAll(".nav-item").forEach(b => b.addEventListener("click", () => showPage(b.dataset.page)));
+$("#menu-toggle").addEventListener("click", () => {
+  if (window.innerWidth < 992) document.body.classList.toggle("sidebar-open");
+  else document.body.classList.toggle("sidebar-collapsed");
+});
+$("#backdrop").addEventListener("click", () => document.body.classList.remove("sidebar-open"));
+$("#fullscreen").addEventListener("click", () => {
+  try {
+    if (document.fullscreenElement) document.exitFullscreen();
+    else document.documentElement.requestFullscreen();
+  } catch (e) { /* full screen not supported */ }
+});
+$("#exit-dash").addEventListener("click", () => showPage("dashboard"));
+
+/* =====================================================================
+   START — opened from the game (?level=G8&pid=...) goes straight to enrollment
+   ===================================================================== */
+$("#sy-chip").textContent = "A.Y. " + CONFIG.SCHOOL_YEAR;
+if (fromGame) go("start"); else showPage("dashboard");
+</script>
+</body>
+</html>
