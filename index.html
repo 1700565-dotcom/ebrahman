@@ -343,8 +343,10 @@ const CONFIG = {
   REQUIRED_EMAIL_DOMAIN: "",   // e.g. "ub.edu.ph" to only accept school emails. Empty = any email.
 
   // Optional: save every enrollment to Supabase. Leave empty to skip.
-  SUPABASE_URL: "",            // e.g. "https://abcd1234.supabase.co"
-  SUPABASE_KEY: "",            // your anon / publishable key (NEVER the service_role key)
+  // Uses the shared project of all three campus groups, but only the Lipa table below.
+  SUPABASE_URL: "https://xbnjmtmmclrippwoblew.supabase.co",            // e.g. "https://abcd1234.supabase.co"  (same project as the other groups)
+  SUPABASE_KEY: "sb_publishable_ktTM2drJhnL2sTcWxODcgA_YBy8w7Iu",            // the anon / publishable key (NEVER the service_role / secret key)
+  SUPABASE_TABLE: "lipa_enrollments",
 
   SHS_STRANDS: [
     "STEM — Science, Technology, Engineering and Mathematics",
@@ -488,6 +490,7 @@ const urlKeyRaw = (params.get("level") || "").toUpperCase();
 const urlLevel = levelIndex(LEGACY_KEYS[urlKeyRaw] || urlKeyRaw);
 const urlPid = cleanId(params.get("pid"));
 const urlName = (params.get("name") || "").slice(0, 60);
+const urlUid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(params.get("uid") || "") ? params.get("uid") : null; // signed-in player's Supabase account id
 const fromGame = urlLevel >= 0 && validPlayerId(urlPid);
 
 const state = {
@@ -953,11 +956,11 @@ async function sendToSupabase(rec) {
   const headers = { "apikey": CONFIG.SUPABASE_KEY, "Content-Type": "application/json", "Prefer": "return=minimal" };
   if (CONFIG.SUPABASE_KEY.startsWith("eyJ")) headers["Authorization"] = "Bearer " + CONFIG.SUPABASE_KEY; // legacy anon JWT
   try {
-    const res = await fetch(CONFIG.SUPABASE_URL.replace(/\/$/, "") + "/rest/v1/enrollments", {
+    const res = await fetch(CONFIG.SUPABASE_URL.replace(/\/$/, "") + "/rest/v1/" + CONFIG.SUPABASE_TABLE, {
       method: "POST",
       headers,
       body: JSON.stringify({
-        player_id: rec.playerId, level: rec.levelKey, student_type: rec.studentType,
+        user_id: urlUid, player_id: rec.playerId, level: rec.levelKey, student_type: rec.studentType,
         full_name: rec.fullName, email: rec.email, track: rec.track || null,
         last_school: rec.prevSchool || null, exam_score: rec.examScore,
         student_no: rec.studentNo, enrollment_code: rec.code
