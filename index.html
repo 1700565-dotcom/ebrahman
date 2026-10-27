@@ -344,8 +344,8 @@ const CONFIG = {
 
   // Optional: save every enrollment to Supabase. Leave empty to skip.
   // Uses the shared project of all three campus groups, but only the Lipa table below.
-  SUPABASE_URL: "https://xbnjmtmmclrippwoblew.supabase.co",            // e.g. "https://abcd1234.supabase.co"  (same project as the other groups)
-  SUPABASE_KEY: "sb_publishable_ktTM2drJhnL2sTcWxODcgA_YBy8w7Iu",            // the anon / publishable key (NEVER the service_role / secret key)
+  SUPABASE_URL: "",            // e.g. "https://abcd1234.supabase.co"  (same project as the other groups)
+  SUPABASE_KEY: "",            // the anon / publishable key (NEVER the service_role / secret key)
   SUPABASE_TABLE: "lipa_enrollments",
 
   SHS_STRANDS: [
@@ -436,7 +436,9 @@ const BANK = {
     { s: "Filipino", q: "Sino ang may-akda ng \"Florante at Laura\"?", c: ["José Rizal", "Lope K. Santos", "Severino Reyes", "Francisco Balagtas"], a: 3 },
     { s: "AP", q: "The 1987 Philippine Constitution was ratified during the term of which president?", c: ["Corazon Aquino", "Fidel Ramos", "Ferdinand Marcos", "Joseph Estrada"], a: 0 },
     { s: "AP", q: "According to the law of demand, when price goes up, quantity demanded…", c: ["goes up", "goes down", "stays the same", "doubles"], a: 1 },
-    { s: "Careers", q: "Which SHS strand focuses on Science, Technology, Engineering and Mathematics?", c: ["ABM", "HUMSS", "STEM", "GAS"], a: 2 }
+    { s: "Careers", q: "Which SHS strand focuses on Science, Technology, Engineering and Mathematics?", c: ["ABM", "HUMSS", "STEM", "GAS"], a: 2 },
+    { s: "UB", q: "Which of these is one of the UB Core Values?", c: ["Love of Wisdom", "Love of Money", "Love of Fame", "Love of Power"], a: 0 },
+    { s: "UB", q: "What are the school colors of the University of Batangas?", c: ["Blue and gold", "Maroon and gold", "Green and white", "Red and white"], a: 1 }
   ],
   COL: [
     { s: "Math", q: "If f(x) = 2x² − 3, what is f(3)?", c: ["15", "9", "33", "12"], a: 0 },
@@ -453,7 +455,9 @@ const BANK = {
     { s: "Logic", q: "All students in Room 3 are enrolled. Ana is in Room 3. Which conclusion is valid?", c: ["Ana is not enrolled.", "Some students are not enrolled.", "It cannot be determined.", "Ana is enrolled."], a: 3 },
     { s: "ICT", q: "Which of these is an input device?", c: ["Keyboard", "Monitor", "Printer", "Speaker"], a: 0 },
     { s: "Civics", q: "Which document is the fundamental law of the Philippines?", c: ["The Civil Code", "The 1987 Constitution", "The Revised Penal Code", "The Labor Code"], a: 1 },
-    { s: "Math", q: "3 out of 12 is what percent?", c: ["30%", "36%", "25%", "4%"], a: 2 }
+    { s: "Math", q: "3 out of 12 is what percent?", c: ["30%", "36%", "25%", "4%"], a: 2 },
+    { s: "UB History", q: "The University of Batangas was founded in 1946 under what name?", c: ["Batangas State College", "Lipa Institute", "Western Philippine Colleges", "Hilltop Academy"], a: 2 },
+    { s: "UB History", q: "In what year did UB become the first private university in Batangas Province?", c: ["1946", "1953", "2011", "1996"], a: 3 }
   ]
 };
 
